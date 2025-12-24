@@ -1,0 +1,18 @@
+dependencies:
+  espressif/qrcode:
+    component_hash: 3b493771bc5d6ad30cbf87c25bf784aada8a08c941504355b55d6b75518ed7bc
+    dependencies: []
+    source:
+      registry_url: https://components.espressif.com/
+      type: service
+    version: 0.1.0~2
+  idf:
+    source:
+      type: idf
+    version: 5.5.1
+direct_dependencies:
+- espressif/qrcode
+- idf
+manifest_hash: e5e3ab276184c2405ec48c393861864070febecf86dd7fa4569c640e574ff30f
+target: esp32
+version: 2.0.0
