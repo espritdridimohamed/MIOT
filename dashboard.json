@@ -1,0 +1,966 @@
+[
+    {
+        "id": "3d7a281d3cb69f92",
+        "type": "tab",
+        "label": "MIOT Dashboard & Firestore",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "5f6d89ffdd1531d7",
+        "type": "mqtt in",
+        "z": "3d7a281d3cb69f92",
+        "name": "Temperature",
+        "topic": "miot/dht22/temperature",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "dd79c52dfd597005",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 100,
+        "wires": [
+            [
+                "5d76cde046ef7cff",
+                "25b88d88f17521b3"
+            ]
+        ]
+    },
+    {
+        "id": "5d76cde046ef7cff",
+        "type": "delay",
+        "z": "3d7a281d3cb69f92",
+        "name": "Rate 1s",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "allowrate": true,
+        "outputs": 1,
+        "x": 360,
+        "y": 100,
+        "wires": [
+            [
+                "baef77cf4552a6c1"
+            ]
+        ]
+    },
+    {
+        "id": "baef77cf4552a6c1",
+        "type": "function",
+        "z": "3d7a281d3cb69f92",
+        "name": "Temp History",
+        "func": "const value = parseFloat(msg.payload);\nif (isNaN(value)) return null;\nconst projectId = \"miot-2a535\";\nconst apiKey = \"AIzaSyAthtPTwsME_GWtuXELBUos_9Tnws-d5to\";\nconst collection = \"dht22_temperature\";\n\nmsg.payload = {\n    fields: {\n        type: { stringValue: \"temperature\" },\n        value: { doubleValue: value },\n        unit: { stringValue: \"°C\" },\n        timestamp: { timestampValue: new Date().toISOString() }\n    }\n};\n\nmsg.url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/${collection}?key=${apiKey}`;\nmsg.method = \"POST\";\nmsg.headers = { \"Content-Type\": \"application/json\" };\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 100,
+        "wires": [
+            [
+                "2bd9313959d9608f"
+            ]
+        ]
+    },
+    {
+        "id": "2bd9313959d9608f",
+        "type": "http request",
+        "z": "3d7a281d3cb69f92",
+        "name": "Firestore Temp",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 800,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "25b88d88f17521b3",
+        "type": "ui_gauge",
+        "z": "3d7a281d3cb69f92",
+        "name": "Temperature",
+        "group": "6fd3b1a6761e6a9c",
+        "order": 1,
+        "width": 6,
+        "height": 4,
+        "gtype": "gauge",
+        "title": "Temperature",
+        "label": "°C",
+        "format": "{{value | number:1}}",
+        "min": 0,
+        "max": 50,
+        "colors": [
+            "#00b500",
+            "#e6a23c",
+            "#ca3838"
+        ],
+        "seg1": "20",
+        "seg2": "35",
+        "className": "",
+        "x": 360,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "7436fdfd31b3f413",
+        "type": "mqtt in",
+        "z": "3d7a281d3cb69f92",
+        "name": "Humidity",
+        "topic": "miot/dht22/humidity",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "dd79c52dfd597005",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 300,
+        "wires": [
+            [
+                "f4ced0db05c2db4b",
+                "268d9f188cfacb88"
+            ]
+        ]
+    },
+    {
+        "id": "f4ced0db05c2db4b",
+        "type": "delay",
+        "z": "3d7a281d3cb69f92",
+        "name": "Rate 1s",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": true,
+        "allowrate": true,
+        "outputs": 1,
+        "x": 360,
+        "y": 300,
+        "wires": [
+            [
+                "8b057ce4242df897"
+            ]
+        ]
+    },
+    {
+        "id": "8b057ce4242df897",
+        "type": "function",
+        "z": "3d7a281d3cb69f92",
+        "name": "Hum History",
+        "func": "const value = parseFloat(msg.payload);\nif (isNaN(value)) return null;\nconst projectId = \"miot-2a535\";\nconst apiKey = \"AIzaSyAthtPTwsME_GWtuXELBUos_9Tnws-d5to\";\nconst collection = \"dht22_humidity\";\n\nmsg.payload = {\n    fields: {\n        type: { stringValue: \"humidity\" },\n        value: { doubleValue: value },\n        unit: { stringValue: \"%\" },\n        timestamp: { timestampValue: new Date().toISOString() }\n    }\n};\n\nmsg.url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/${collection}?key=${apiKey}`;\nmsg.method = \"POST\";\nmsg.headers = { \"Content-Type\": \"application/json\" };\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 300,
+        "wires": [
+            [
+                "7b20adf06b429bf7"
+            ]
+        ]
+    },
+    {
+        "id": "7b20adf06b429bf7",
+        "type": "http request",
+        "z": "3d7a281d3cb69f92",
+        "name": "Firestore Hum",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 800,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "268d9f188cfacb88",
+        "type": "ui_gauge",
+        "z": "3d7a281d3cb69f92",
+        "name": "Humidity",
+        "group": "6fd3b1a6761e6a9c",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gauge",
+        "title": "Humidity",
+        "label": "%",
+        "format": "{{value | number:0}}",
+        "min": 0,
+        "max": 100,
+        "colors": [
+            "#00b500",
+            "#e6a23c",
+            "#ca3838"
+        ],
+        "seg1": "40",
+        "seg2": "70",
+        "className": "",
+        "x": 360,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "d61af2b63e027f3c",
+        "type": "mqtt in",
+        "z": "3d7a281d3cb69f92",
+        "name": "LDR",
+        "topic": "miot/ldr/raw",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "dd79c52dfd597005",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 500,
+        "wires": [
+            [
+                "ed21089ad22d91ea"
+            ]
+        ]
+    },
+    {
+        "id": "ed21089ad22d91ea",
+        "type": "ui_gauge",
+        "z": "3d7a281d3cb69f92",
+        "name": "LDR Raw",
+        "group": "6fd3b1a6761e6a9c",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "gtype": "gauge",
+        "title": "Light Sensor",
+        "label": "raw",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 4095,
+        "colors": [
+            "#ca3838",
+            "#e6a23c",
+            "#00b500"
+        ],
+        "seg1": "1000",
+        "seg2": "3000",
+        "className": "",
+        "x": 360,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "55bd81c4e8bfa5e6",
+        "type": "mqtt in",
+        "z": "3d7a281d3cb69f92",
+        "name": "IR Code",
+        "topic": "miot/ir/code",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "dd79c52dfd597005",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 600,
+        "wires": [
+            [
+                "511d05caebdc3809"
+            ]
+        ]
+    },
+    {
+        "id": "511d05caebdc3809",
+        "type": "ui_text",
+        "z": "3d7a281d3cb69f92",
+        "group": "6fd3b1a6761e6a9c",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "Last IR Code",
+        "label": "Last IR Code",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "x": 360,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "431a24f3b57aba3a",
+        "type": "mqtt in",
+        "z": "3d7a281d3cb69f92",
+        "name": "LED1 State",
+        "topic": "push/led1",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "dd79c52dfd597005",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 700,
+        "wires": [
+            [
+                "8466809172b563e0",
+                "ee8c93b0c5e97784"
+            ]
+        ]
+    },
+    {
+        "id": "8466809172b563e0",
+        "type": "delay",
+        "z": "3d7a281d3cb69f92",
+        "name": "Rate 10s",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "10",
+        "rateUnits": "second",
+        "drop": true,
+        "allowrate": true,
+        "outputs": 1,
+        "x": 360,
+        "y": 700,
+        "wires": [
+            [
+                "c72452f940a8bdac"
+            ]
+        ]
+    },
+    {
+        "id": "4a3d591fb1681f58",
+        "type": "mqtt in",
+        "z": "3d7a281d3cb69f92",
+        "name": "LED2 State",
+        "topic": "push/led2",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "dd79c52dfd597005",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 800,
+        "wires": [
+            [
+                "af36f4cf5889a6ed",
+                "97b01efbb57a8427"
+            ]
+        ]
+    },
+    {
+        "id": "af36f4cf5889a6ed",
+        "type": "delay",
+        "z": "3d7a281d3cb69f92",
+        "name": "Rate 10s",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "10",
+        "rateUnits": "second",
+        "drop": true,
+        "allowrate": true,
+        "outputs": 1,
+        "x": 360,
+        "y": 800,
+        "wires": [
+            [
+                "c72452f940a8bdac"
+            ]
+        ]
+    },
+    {
+        "id": "c3ba92a6baa07155",
+        "type": "mqtt in",
+        "z": "3d7a281d3cb69f92",
+        "name": "Servo State",
+        "topic": "push/servo",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "dd79c52dfd597005",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 900,
+        "wires": [
+            [
+                "819a70f8b547baca",
+                "072379097bed167a"
+            ]
+        ]
+    },
+    {
+        "id": "819a70f8b547baca",
+        "type": "delay",
+        "z": "3d7a281d3cb69f92",
+        "name": "Rate 10s",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "10",
+        "rateUnits": "second",
+        "drop": true,
+        "allowrate": true,
+        "outputs": 1,
+        "x": 360,
+        "y": 900,
+        "wires": [
+            [
+                "c72452f940a8bdac"
+            ]
+        ]
+    },
+    {
+        "id": "c72452f940a8bdac",
+        "type": "function",
+        "z": "3d7a281d3cb69f92",
+        "name": "State History",
+        "func": "const subtopic = msg.topic.split('/')[1];\nconst value = msg.payload;\nconst projectId = \"miot-2a535\";\nconst apiKey = \"AIzaSyAthtPTwsME_GWtuXELBUos_9Tnws-d5to\";\nconst collection = \"dht22_states\";\n\nmsg.payload = {\n    fields: {\n        type: { stringValue: subtopic },\n        value: { stringValue: value.toString() },\n        timestamp: { timestampValue: new Date().toISOString() }\n    }\n};\n\nmsg.url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/${collection}?key=${apiKey}`;\nmsg.method = \"POST\";\nmsg.headers = { \"Content-Type\": \"application/json\" };\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 580,
+        "y": 800,
+        "wires": [
+            [
+                "51cfe864edbb1429"
+            ]
+        ]
+    },
+    {
+        "id": "51cfe864edbb1429",
+        "type": "http request",
+        "z": "3d7a281d3cb69f92",
+        "name": "Firestore States",
+        "method": "set by msg.method",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 800,
+        "y": 800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ee8c93b0c5e97784",
+        "type": "ui_switch",
+        "z": "3d7a281d3cb69f92",
+        "name": "LED1 Control",
+        "label": "LED 1",
+        "group": "28bf7aa150d480a8",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "miot/control/led1",
+        "topicType": "str",
+        "style": "",
+        "onvalue": "ON",
+        "onvalueType": "str",
+        "onicon": "",
+        "oncolor": "#00ff00",
+        "offvalue": "OFF",
+        "offvalueType": "str",
+        "offcolor": "#808080",
+        "animate": true,
+        "className": "",
+        "x": 360,
+        "y": 700,
+        "wires": [
+            [
+                "c28fa92a57734f5a"
+            ]
+        ]
+    },
+    {
+        "id": "97b01efbb57a8427",
+        "type": "ui_switch",
+        "z": "3d7a281d3cb69f92",
+        "name": "LED2 Control",
+        "label": "LED 2",
+        "group": "28bf7aa150d480a8",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "miot/control/led2",
+        "topicType": "str",
+        "style": "",
+        "onvalue": "ON",
+        "onvalueType": "str",
+        "onicon": "",
+        "oncolor": "#00ff00",
+        "offvalue": "OFF",
+        "offvalueType": "str",
+        "offcolor": "#808080",
+        "animate": true,
+        "className": "",
+        "x": 360,
+        "y": 800,
+        "wires": [
+            [
+                "c28fa92a57734f5a"
+            ]
+        ]
+    },
+    {
+        "id": "072379097bed167a",
+        "type": "ui_slider",
+        "z": "3d7a281d3cb69f92",
+        "name": "Servo Control",
+        "label": "Servo Angle",
+        "group": "28bf7aa150d480a8",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "miot/control/servo",
+        "topicType": "str",
+        "min": 0,
+        "max": 180,
+        "step": 5,
+        "className": "",
+        "x": 360,
+        "y": 900,
+        "wires": [
+            [
+                "c28fa92a57734f5a"
+            ]
+        ]
+    },
+    {
+        "id": "c28fa92a57734f5a",
+        "type": "mqtt out",
+        "z": "3d7a281d3cb69f92",
+        "name": "Send Control",
+        "topic": "",
+        "qos": "1",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "dd79c52dfd597005",
+        "x": 580,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "6d131e8704f19088",
+        "type": "inject",
+        "z": "3d7a281d3cb69f92",
+        "name": "Refresh Temp Chart",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 1100,
+        "wires": [
+            [
+                "ab859e016213400f"
+            ]
+        ]
+    },
+    {
+        "id": "ab859e016213400f",
+        "type": "function",
+        "z": "3d7a281d3cb69f92",
+        "name": "Query Temp",
+        "func": "const projectId = \"miot-2a535\";\nconst apiKey = \"AIzaSyAthtPTwsME_GWtuXELBUos_9Tnws-d5to\";\nmsg.url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/dht22_temperature?pageSize=50&orderBy=timestamp desc&key=${apiKey}`;\nmsg.method = \"GET\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 1100,
+        "wires": [
+            [
+                "aa6e950e644a678d"
+            ]
+        ]
+    },
+    {
+        "id": "aa6e950e644a678d",
+        "type": "http request",
+        "z": "3d7a281d3cb69f92",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 600,
+        "y": 1100,
+        "wires": [
+            [
+                "239d31b37ece2fe4"
+            ]
+        ]
+    },
+    {
+        "id": "239d31b37ece2fe4",
+        "type": "function",
+        "z": "3d7a281d3cb69f92",
+        "name": "Format Temp Chart",
+        "func": "if (!msg.payload.documents) return null;\nlet docs = msg.payload.documents.slice(-12);\nlet data = [];\nlet labels = [];\ndocs.forEach(doc => {\n    const v = doc.fields.value.doubleValue || doc.fields.value.integerValue;\n    const t = new Date(doc.fields.timestamp.timestampValue);\n    data.push(v);\n    labels.push(t.toLocaleTimeString());\n});\nmsg.payload = [{series: [\"Temperature\"], data: [data], labels: labels}];\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 1100,
+        "wires": [
+            [
+                "9bd2a120abfa7751"
+            ]
+        ]
+    },
+    {
+        "id": "9bd2a120abfa7751",
+        "type": "ui_chart",
+        "z": "3d7a281d3cb69f92",
+        "name": "Temp History",
+        "group": "867e9f564d6c3c59",
+        "order": 1,
+        "width": 12,
+        "height": 8,
+        "label": "Temperature History",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "No data",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 12,
+        "removeOlderPoints": "12",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#ff7f0e",
+            "#2ca02c",
+            "#d62728",
+            "#9467bd",
+            "#8c564b",
+            "#e377c2",
+            "#7f7f7f",
+            "#bcbd22",
+            "#17becf"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1060,
+        "y": 1100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ceda55be9bb0d99c",
+        "type": "inject",
+        "z": "3d7a281d3cb69f92",
+        "name": "Refresh Hum Chart",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 1200,
+        "wires": [
+            [
+                "cdadacf36199b89a"
+            ]
+        ]
+    },
+    {
+        "id": "cdadacf36199b89a",
+        "type": "function",
+        "z": "3d7a281d3cb69f92",
+        "name": "Query Hum",
+        "func": "const projectId = \"miot-2a535\";\nconst apiKey = \"AIzaSyAthtPTwsME_GWtuXELBUos_9Tnws-d5to\";\nmsg.url = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/dht22_humidity?pageSize=50&orderBy=timestamp desc&key=${apiKey}`;\nmsg.method = \"GET\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 1200,
+        "wires": [
+            [
+                "a140b13cb30ed42e"
+            ]
+        ]
+    },
+    {
+        "id": "a140b13cb30ed42e",
+        "type": "http request",
+        "z": "3d7a281d3cb69f92",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 600,
+        "y": 1200,
+        "wires": [
+            [
+                "11b2c22a9e25d469"
+            ]
+        ]
+    },
+    {
+        "id": "11b2c22a9e25d469",
+        "type": "function",
+        "z": "3d7a281d3cb69f92",
+        "name": "Format Hum Chart",
+        "func": "if (!msg.payload.documents) return null;\nlet docs = msg.payload.documents.slice(-12);\nlet data = [];\nlet labels = [];\ndocs.forEach(doc => {\n    const v = doc.fields.value.doubleValue || doc.fields.value.integerValue;\n    const t = new Date(doc.fields.timestamp.timestampValue);\n    data.push(v);\n    labels.push(t.toLocaleTimeString());\n});\nmsg.payload = [{series: [\"Humidity\"], data: [data], labels: labels}];\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 1200,
+        "wires": [
+            [
+                "388ce4d7bf010d5a"
+            ]
+        ]
+    },
+    {
+        "id": "388ce4d7bf010d5a",
+        "type": "ui_chart",
+        "z": "3d7a281d3cb69f92",
+        "name": "Hum History",
+        "group": "867e9f564d6c3c59",
+        "order": 2,
+        "width": 12,
+        "height": 6,
+        "label": "Humidity History",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "No data",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#ff7f0e",
+            "#2ca02c",
+            "#d62728",
+            "#9467bd",
+            "#8c564b",
+            "#e377c2",
+            "#7f7f7f",
+            "#bcbd22",
+            "#17becf"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1060,
+        "y": 1200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "dd79c52dfd597005",
+        "type": "mqtt-broker",
+        "name": "aa",
+        "broker": "192.168.1.20",
+        "port": "8883",
+        "tls": "860fcbcd77462306",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "6fd3b1a6761e6a9c",
+        "type": "ui_group",
+        "name": "Real-Time Sensors",
+        "tab": "d4d9683a28d92402",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "28bf7aa150d480a8",
+        "type": "ui_group",
+        "name": "Controls",
+        "tab": "d4d9683a28d92402",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "867e9f564d6c3c59",
+        "type": "ui_group",
+        "name": "Historical Charts",
+        "tab": "d4d9683a28d92402",
+        "order": 3,
+        "disp": true,
+        "width": "12",
+        "collapse": false
+    },
+    {
+        "id": "860fcbcd77462306",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "client.crt",
+        "keyname": "client.key",
+        "caname": "ca.crt",
+        "servername": "",
+        "verifyservercert": true,
+        "alpnprotocol": ""
+    },
+    {
+        "id": "d4d9683a28d92402",
+        "type": "ui_tab",
+        "name": "MIOT Home",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "5d453d95f4ca6cec",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6"
+        }
+    }
+]
